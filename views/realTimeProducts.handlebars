@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo en Tiempo Real</title>
+</head>
+<body>
+  <h1>Catálogo en Tiempo Real</h1>
+  <ul id="products-list">
+    {{#each products}}
+      <li id="product-{{this.id}}">{{this.title}} - {{this.price}}</li>
+    {{/each}}
+  </ul>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    socket.on('product-update', (products) => {
+      const productsList = document.getElementById('products-list');
+      productsList.innerHTML = '';
+      products.forEach(product => {
+        const listItem = document.createElement('li');
+        listItem.id = `product-${product.id}`;
+        listItem.innerText = `${product.title} - ${product.price}`;
+        productsList.appendChild(listItem);
+      });
+    });
+  </script>
+</body>
+</html>
